@@ -1,0 +1,42 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        // Handle the case where either number is zero
+        if (num1 == "0" || num2 == "0") return "0";
+
+        int n = num1.size();
+        int m = num2.size();
+        // The maximum possible length of the product is n + m
+        vector<int> res(n + m, 0);
+
+        // Multiply each digit of num1 by each digit of num2
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = m - 1; j >= 0; j--) {
+                int mul = (num1[i] - '0') * (num2[j] - '0');
+                
+                // The sum goes into the index (i + j + 1)
+                int sum = mul + res[i + j + 1];
+
+                res[i + j + 1] = sum % 10; // Store the single digit
+                res[i + j] += sum / 10;     // Add the carry to the next position
+            }
+        }
+
+        // Convert the vector of digits back into a string
+        string result = "";
+        for (int digit : res) {
+            // Skip leading zeros
+            if (!(result.empty() && digit == 0)) {
+                result += to_string(digit);
+            }
+        }
+
+        return result.empty() ? "0" : result;
+    }
+};
