@@ -1,0 +1,46 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> result;
+        vector<int> current;
+        vector<bool> used(nums.size(), false);
+        
+        // 1. Sort the numbers to make it easy to skip duplicates
+        sort(nums.begin(), nums.end());
+        
+        backtrack(nums, used, current, result);
+        return result;
+    }
+
+private:
+    void backtrack(vector<int>& nums, vector<bool>& used, vector<int>& current, vector<vector<int>>& result) {
+        // Base case: If the current permutation is the same size as nums
+        if (current.size() == nums.size()) {
+            result.push_back(current);
+            return;
+        }
+
+        for (int i = 0; i < nums.size(); i++) {
+            // Skip if the element is already used in the current path
+            if (used[i]) continue;
+
+            // 2. Skip duplicates: if the current element is the same as the previous one
+            // and the previous one hasn't been used in this path yet, skip it.
+            if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;
+
+            used[i] = true;
+            current.push_back(nums[i]);
+            
+            backtrack(nums, used, current, result);
+            
+            // Backtrack
+            used[i] = false;
+            current.pop_back();
+        }
+    }
+};
