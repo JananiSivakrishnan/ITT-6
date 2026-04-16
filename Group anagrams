@@ -1,0 +1,31 @@
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        // 1. Map to store sorted string as Key and a list of original strings as Value
+        unordered_map<string, vector<string>> anagramMap;
+        
+        for (string s : strs) {
+            string sortedS = s;
+            // 2. Sort the string to create a "key" that is the same for all anagrams
+            sort(sortedS.begin(), sortedS.end());
+            
+            // 3. Add the original string to the corresponding group in the map
+            anagramMap[sortedS].push_back(s);
+        }
+        
+        // 4. Move the groups from the map into the final result vector
+        vector<vector<string>> result;
+        for (auto const& [key, group] : anagramMap) {
+            result.push_back(group);
+        }
+        
+        return result;
+    }
+};
