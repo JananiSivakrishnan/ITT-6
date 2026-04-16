@@ -1,0 +1,40 @@
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> result;
+        vector<int> current;
+        // Sorting helps in pruning the search tree later
+        sort(candidates.begin(), candidates.end());
+        
+        backtrack(candidates, target, 0, current, result);
+        return result;
+    }
+
+private:
+    void backtrack(vector<int>& candidates, int target, int start, vector<int>& current, vector<vector<int>>& result) {
+        // Base Case: If the target reaches 0, we found a valid combination
+        if (target == 0) {
+            result.push_back(current);
+            return;
+        }
+
+        for (int i = start; i < candidates.size(); i++) {
+            // Pruning: Since the array is sorted, if the current candidate 
+            // is greater than the target, all subsequent candidates will also be too large.
+            if (candidates[i] > target) break;
+
+            current.push_back(candidates[i]); // Choose the number
+            
+            // Recurse: Note that we pass 'i' as the start index again because 
+            // the problem allows using the same number an unlimited number of times.
+            backtrack(candidates, target - candidates[i], i, current, result);
+            
+            current.pop_back(); // Backtrack: Remove the number to try others
+        }
+    }
+};
